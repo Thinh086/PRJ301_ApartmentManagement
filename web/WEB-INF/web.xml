@@ -12,6 +12,14 @@
         <servlet-name>ManageApartmentServlet</servlet-name>
         <servlet-class>controller.ManageApartmentServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>EmployeeTaskServlet</servlet-name>
+        <servlet-class>controller.EmployeeTaskServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TrackProgressServlet</servlet-name>
+        <servlet-class>controller.TrackProgressServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>RequestServlet</servlet-name>
         <url-pattern>/RequestServlet</url-pattern>
@@ -24,7 +32,15 @@
         <servlet-name>ManageApartmentServlet</servlet-name>
         <url-pattern>/ManageApartmentServlet</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EmployeeTaskServlet</servlet-name>
+        <url-pattern>/EmployeeTaskServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TrackProgressServlet</servlet-name>
+        <url-pattern>/TrackProgressServlet</url-pattern>
+    </servlet-mapping>
     <welcome-file-list>
-        <welcome-file>manage-apartments.jsp</welcome-file>
+        <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 </web-app>
