@@ -11,11 +11,9 @@ public class DBContext {
     public Connection getConnection() throws Exception {
         // Driver kết nối Microsoft SQL Server
         String driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-        
-        // Tên cơ sở dữ liệu đúng theo file .sql của bạn là QuanLyChungCu
-        String url = "jdbc:sqlserver://localhost:1433;databaseName=QuanLyChungCu;encrypt=false;";
+        String url = "jdbc:sqlserver://localhost:1433;databaseName=QuanLyChungCu;encrypt=false;trustServerCertificate=true;";
         String user = "sa"; 
-        String password = "123"; // Nhớ sửa lại đúng mật khẩu SQL Server trên máy bạn nhé
+        String password = "123";
 
         Class.forName(driverClass);
         return DriverManager.getConnection(url, user, password);

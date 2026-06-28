@@ -9,7 +9,7 @@ import model.Apartment;
 
 public class ApartmentDAO {
 
-    // 1. Lấy danh sách căn hộ kèm tên chủ hộ và người thuê (Dùng câu lệnh JOIN theo đúng file .sql)
+    // 1. Lấy danh sách căn hộ kèm tên chủ hộ và người thuê
     public List<Apartment> getAllApartments() {
         List<Apartment> list = new ArrayList<>();
         DBContext db = new DBContext();
@@ -18,17 +18,16 @@ public class ApartmentDAO {
         ResultSet rs = null;
         try {
             conn = db.getConnection();
-            // JOIN bảng Apartment với Account để lấy thông tin tên chủ hộ và đại diện thuê
             String sql = "SELECT a.apartment_id AS id, a.apartment_code AS room_number, "
                        + "       o_acc.full_name AS owner_name, "
                        + "       r_acc.full_name AS tenant_name, "
                        + "       (SELECT STRING_AGG(res.full_name, ', ') "
                        + "        FROM Resident res WHERE res.apartment_id = a.apartment_id) AS members_list "
                        + "FROM Apartment a "
-                       + "LEFT JOIN ApartmentOwner ao ON a.apartment_id = ao.apartment_id AND ao.is_active = 1 "
+                       + "LEFT JOIN ApartmentOwner ao ON a.apartment_id = ao.apartment_id "
                        + "LEFT JOIN Account o_acc ON ao.account_id = o_acc.account_id "
-                       + "LEFT JOIN ApartmentRental ar ON a.apartment_id = ar.apartment_id AND ar.is_active = 1 "
-                       + "LEFT JOIN Account r_acc ON ar.account_id = r_acc.account_id";
+                       + "LEFT JOIN ApartmentRental ar ON a.apartment_id = ar.apartment_id "
+                       + "LEFT JOIN Account r_acc ON ar.tenant_account_id = r_acc.account_id";
             
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -41,7 +40,7 @@ public class ApartmentDAO {
                 apt.setMembersList(rs.getString("members_list") != null ? rs.getString("members_list") : "Không có");
                 list.add(apt);
             }
-        } catch (Exception e) {
+        } catch (Exception e) {         
             e.printStackTrace();
         } finally {
             try { if (rs != null) rs.close(); if (ps != null) ps.close(); if (conn != null) conn.close(); } catch (Exception e) {}
@@ -49,7 +48,7 @@ public class ApartmentDAO {
         return list;
     }
 
-    // 2. Cập nhật trạng thái hoặc thông tin cơ bản của căn hộ dựa trên ID
+    // 2. Cập nhật thông tin cơ bản của căn hộ
     public boolean updateApartment(int id, String roomNumber) {
         DBContext db = new DBContext();
         Connection conn = null;

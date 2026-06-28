@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Quản Lý Chung Cư PRJ301</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; display: flex; min-height: 100vh; }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px; background: #0f1f3d; display: flex; flex-direction: column;
+            position: fixed; top: 0; left: 0; height: 100vh; z-index: 100;
+        }
+        .sb-logo { padding: 22px 18px 18px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+        .sb-logo-icon { font-size: 26px; color: #93c5fd; }
+        .sb-logo-title { color: #fff; font-size: 15px; font-weight: 600; margin-top: 8px; }
+        .sb-logo-sub { color: rgba(255,255,255,0.35); font-size: 11px; margin-top: 3px; }
+        .sb-section { padding: 18px 16px 6px; color: rgba(255,255,255,0.3); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
+        .sb-item {
+            display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+            color: rgba(255,255,255,0.55); text-decoration: none; border-radius: 8px;
+            margin: 2px 8px; font-size: 13px; font-weight: 500; transition: all 0.15s;
+        }
+        .sb-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.9); }
+        .sb-item.active { background: rgba(37,99,235,0.3); color: #93c5fd; }
+        .sb-item i { font-size: 17px; width: 20px; flex-shrink: 0; }
+        .sb-badge {
+            margin-left: auto; background: #f59e0b; color: #fff;
+            font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px;
+        }
+        .sb-bottom { margin-top: auto; padding: 14px; border-top: 1px solid rgba(255,255,255,0.07); }
+        .sb-user { display: flex; align-items: center; gap: 10px; }
+        .sb-avatar {
+            width: 34px; height: 34px; border-radius: 50%;
+            background: rgba(37,99,235,0.4); display: flex; align-items: center;
+            justify-content: center; color: #93c5fd; font-size: 13px; font-weight: 600; flex-shrink: 0;
+        }
+        .sb-uname { color: rgba(255,255,255,0.85); font-size: 13px; font-weight: 500; }
+        .sb-urole { color: rgba(255,255,255,0.35); font-size: 11px; margin-top: 2px; }
+
+        /* MAIN */
+        .main { margin-left: 240px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+        .topbar {
+            background: #fff; padding: 14px 28px; display: flex; align-items: center;
+            justify-content: space-between; border-bottom: 1px solid #e8ecf0;
+            position: sticky; top: 0; z-index: 50;
+        }
+        .topbar-left { display: flex; align-items: center; gap: 10px; }
+        .topbar-title { font-size: 16px; font-weight: 600; color: #1e3a5f; }
+        .topbar-sub { font-size: 13px; color: #94a3b8; }
+        .topbar-right { display: flex; align-items: center; gap: 10px; }
+        .topbar-date { font-size: 12px; color: #94a3b8; background: #f8fafc; padding: 6px 12px; border-radius: 6px; border: 1px solid #e8ecf0; }
+
+        /* CONTENT */
+        .content { padding: 28px; flex: 1; }
+
+        /* WELCOME */
+        .welcome-banner {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+            border-radius: 14px; padding: 28px 32px; margin-bottom: 28px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .welcome-text h2 { color: #fff; font-size: 20px; font-weight: 600; margin-bottom: 6px; }
+        .welcome-text p { color: rgba(255,255,255,0.65); font-size: 14px; }
+        .welcome-icon { font-size: 60px; color: rgba(255,255,255,0.15); }
+
+        /* MODULE CARDS */
+        .modules-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .module-card {
+            background: #fff; border-radius: 14px; padding: 24px;
+            border: 1px solid #e8ecf0; text-decoration: none; color: inherit;
+            display: flex; align-items: flex-start; gap: 18px;
+            transition: all 0.2s; cursor: pointer;
+        }
+        .module-card:hover { border-color: #2563eb; box-shadow: 0 4px 20px rgba(37,99,235,0.1); transform: translateY(-2px); }
+        .module-card-icon {
+            width: 50px; height: 50px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
+        }
+        .icon-blue { background: #eff6ff; color: #2563eb; }
+        .icon-amber { background: #fffbeb; color: #d97706; }
+        .icon-teal { background: #f0fdfa; color: #0d9488; }
+        .icon-green { background: #f0fdf4; color: #16a34a; }
+        .module-card-body h3 { font-size: 15px; font-weight: 600; color: #1e293b; margin-bottom: 5px; }
+        .module-card-body p { font-size: 13px; color: #94a3b8; line-height: 1.5; }
+        .module-card-arrow { margin-left: auto; font-size: 18px; color: #cbd5e1; flex-shrink: 0; margin-top: 2px; }
+        .module-card:hover .module-card-arrow { color: #2563eb; }
+
+        .footer { padding: 20px 28px; text-align: center; color: #94a3b8; font-size: 12px; border-top: 1px solid #e8ecf0; background: #fff; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sb-logo">
+            <div class="sb-logo-icon"><i class="ti ti-building"></i></div>
+            <div class="sb-logo-title">Hệ thống Quản Lý Chung Cư</div>
+            <div class="sb-logo-sub">PRJ301 — FPT University</div>
+        </div>
+
+        <div class="sb-section">Điều hướng</div>
+        <a href="index.html" class="sb-item active"><i class="ti ti-layout-dashboard"></i> Tổng quan</a>
+        <a href="ManageApartmentServlet" class="sb-item"><i class="ti ti-home"></i> Quản lý căn hộ</a>
+        <a href="ManageRequestServlet" class="sb-item"><i class="ti ti-clipboard-list"></i> Điều phối yêu cầu</a>
+        <a href="TrackProgressServlet" class="sb-item"><i class="ti ti-chart-line"></i> Theo dõi tiến độ</a>
+        <a href="EmployeeTaskServlet" class="sb-item"><i class="ti ti-users"></i> Nhân viên</a>
+
+        <div class="sb-bottom">
+            <div class="sb-user">
+                <div class="sb-avatar">TX</div>
+                <div>
+                    <div class="sb-uname">Ban Quản Lý</div>
+                    <div class="sb-urole">PRJ301 — Nhóm 4</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="topbar">
+            <div class="topbar-left">
+                <div class="topbar-title">Tổng quan hệ thống</div>
+            </div>
+            <div class="topbar-right">
+                <div class="topbar-date" id="today-date"></div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="welcome-banner">
+                <div class="welcome-text">
+                    <h2>Chào mừng đến hệ thống quản lý</h2>
+                    <p>Chọn module bên dưới hoặc sử dụng menu bên trái để điều hướng</p>
+                </div>
+                <div class="welcome-icon"><i class="ti ti-building"></i></div>
+            </div>
+
+            <div class="modules-grid">
+                <a href="ManageApartmentServlet" class="module-card">
+                    <div class="module-card-icon icon-blue"><i class="ti ti-home"></i></div>
+                    <div class="module-card-body">
+                        <h3>Quản lý căn hộ</h3>
+                        <p>Xem & cập nhật thông tin căn hộ, chủ hộ, thành viên và người thuê lại</p>
+                    </div>
+                    <div class="module-card-arrow"><i class="ti ti-arrow-right"></i></div>
+                </a>
+
+                <a href="ManageRequestServlet" class="module-card">
+                    <div class="module-card-icon icon-amber"><i class="ti ti-clipboard-list"></i></div>
+                    <div class="module-card-body">
+                        <h3>Tiếp nhận & điều phối yêu cầu</h3>
+                        <p>Duyệt yêu cầu từ cư dân và gán việc cho nhân viên phụ trách</p>
+                    </div>
+                    <div class="module-card-arrow"><i class="ti ti-arrow-right"></i></div>
+                </a>
+
+                <a href="TrackProgressServlet" class="module-card">
+                    <div class="module-card-icon icon-teal"><i class="ti ti-chart-line"></i></div>
+                    <div class="module-card-body">
+                        <h3>Theo dõi tiến độ xử lý</h3>
+                        <p>Theo dõi danh sách các yêu cầu đang được xử lý và tiến độ mới nhất</p>
+                    </div>
+                    <div class="module-card-arrow"><i class="ti ti-arrow-right"></i></div>
+                </a>
+
+                <a href="EmployeeTaskServlet" class="module-card">
+                    <div class="module-card-icon icon-green"><i class="ti ti-users"></i></div>
+                    <div class="module-card-body">
+                        <h3>Nhân viên — công việc</h3>
+                        <p>Xem danh sách công việc được gán và cập nhật tiến độ xử lý</p>
+                    </div>
+                    <div class="module-card-arrow"><i class="ti ti-arrow-right"></i></div>
+                </a>
+            </div>
+        </div>
+
+        <div class="footer">PRJ301 — Nhóm: Thịnh | Cường | Việt | Bách</div>
+    </div>
+
+    <script>
+        const d = new Date();
+        document.getElementById('today-date').textContent =
+            d.toLocaleDateString('vi-VN', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+    </script>
+</body>
+</html>
